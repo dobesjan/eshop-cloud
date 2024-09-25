@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eshop.Utility.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Eshop.Models
 {
-	public interface IEntity
+    public interface IEntity
 	{
 		int Id { get; set; }
 		string ToJson();
-		bool Validate();
+		EshopValidationResult Validate();
 	}
 }

@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Eshop.Utility.Validation;
 
 namespace Eshop.Models.Users
 {
-	public class Address : Entity
+    public class Address : Entity
 	{
 		public int CustomerId { get; set; }
 
@@ -20,13 +21,26 @@ namespace Eshop.Models.Users
 		[Required]
 		public string PostalCode { get; set; }
 
-		public override bool Validate()
+		public override EshopValidationResult Validate()
 		{
-			if (String.IsNullOrEmpty(Street)) throw new InvalidDataException("Street not provided");
-			if (String.IsNullOrEmpty(City)) throw new InvalidDataException("City not provided");
-			if (String.IsNullOrEmpty(PostalCode)) throw new InvalidDataException("Postal code not provided");
+			var result = new EshopValidationResult();
 
-			return true;
+			if (String.IsNullOrEmpty(Street))
+			{
+				result.AddErrorMessage("Street not provided");
+			}
+
+			if (String.IsNullOrEmpty(City))
+			{
+				result.AddErrorMessage("City not provided");
+			}
+
+			if (String.IsNullOrEmpty(PostalCode))
+			{
+				result.AddErrorMessage("Postal code not provided");
+			}
+
+			return result;
 		}
 	}
 }

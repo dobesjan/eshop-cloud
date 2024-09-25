@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eshop.Utility.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,14 +17,16 @@ namespace Eshop.Models.Users
 
 		public string? PhoneNumber { get; set; }
 
-		public override bool Validate()
+		public override EshopValidationResult Validate()
 		{
-			if (String.IsNullOrEmpty(FirstName)) throw new InvalidDataException("First name not provided");
-			if (String.IsNullOrEmpty(LastName)) throw new InvalidDataException("Last name not provided");
-			if (String.IsNullOrEmpty(Email)) throw new InvalidDataException("Email name not provided");
-			if (String.IsNullOrEmpty(PhoneNumber)) throw new InvalidDataException("Phone number name not provided");
+			var result = new EshopValidationResult();
 
-			return true;
+			if (String.IsNullOrEmpty(FirstName)) result.AddErrorMessage("First name not provided");
+			if (String.IsNullOrEmpty(LastName)) result.AddErrorMessage("Last name not provided");
+			if (String.IsNullOrEmpty(Email)) result.AddErrorMessage("Email name not provided");
+			if (String.IsNullOrEmpty(PhoneNumber)) result.AddErrorMessage("Phone number name not provided");
+
+			return result;
 		}
 	}
 }

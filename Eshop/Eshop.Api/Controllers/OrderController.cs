@@ -19,6 +19,12 @@ namespace Eshop.Api.Controllers
 		[HttpPost]
 		public IActionResult PostOrder([FromBody] Eshop.Models.Orders.Order order)
 		{
+			var validationResult = order.Validate();
+			if (validationResult.Status == Utility.Validation.EshopValidationStatus.FAIL)
+			{
+				return BadRequest(new { validationResult });
+			}
+
 			string json = order.ToJson();
 			var db = _redis.GetDatabase();
 			db.ListRightPushAsync("orders", json);

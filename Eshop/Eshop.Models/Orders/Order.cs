@@ -1,4 +1,5 @@
 ﻿using Eshop.Models.Users;
+using Eshop.Utility.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +13,7 @@ namespace Eshop.Models.Orders
 {
 	public class Order : Entity
 	{
-		public DateTime CreatedDate { get; set; }
+		public DateTime? CreatedDate { get; set; }
 
 		public List<OrderProduct> OrderProducts { get; set; }
 
@@ -26,7 +27,7 @@ namespace Eshop.Models.Orders
 		[ForeignKey(nameof(PaymentId))]
 		public Payment? Payment { get; set; }
 
-		public int BillingContactId { get; set; }
+		public int? BillingContactId { get; set; }
 
 		[ForeignKey(nameof(BillingContactId))]
 		public Contact? BillingContact { get; set; }
@@ -53,6 +54,59 @@ namespace Eshop.Models.Orders
 			};
 
 			return JsonSerializer.Serialize(obj);
+		}
+
+		public override EshopValidationResult Validate()
+		{
+			var result = new EshopValidationResult();
+
+			if (OrderProducts == null)
+			{
+				result.AddErrorMessage("There are not any ordered products!");
+			}
+
+			if (OrderProducts != null && !OrderProducts.Any())
+			{
+				result.AddErrorMessage("There are not any ordered products!");
+			}
+
+			if (!ShippingId.HasValue)
+			{
+				result.AddErrorMessage("Shipping not provided!");
+			}
+
+			if (Payment == null)
+			{
+				result.AddErrorMessage("Payment not provided!");
+			}
+
+			if (BillingContact == null && !BillingContactId.HasValue)
+			{
+				result.AddErrorMessage("Billing contact not provided!");
+			}
+
+			if (BillingContact != null)
+			{
+				if (BillingContact.Person == null && !BillingContact.PersonId.HasValue)
+				{
+					result.AddErrorMessage("Personal information not provided!");
+				}
+                else if (BillingContact.Person != null)
+                {
+					result.MergeValidationResult(BillingContact.Person.Validate());
+                }
+
+				if (BillingContact.Address == null && !BillingContact.AddressId.HasValue)
+				{
+					result.AddErrorMessage("Address not provided!");
+				}
+				else if (BillingContact.Address != null)
+				{
+					result.MergeValidationResult(BillingContact.Address.Validate());
+				}
+			}
+
+			return result;
 		}
 	}
 }
