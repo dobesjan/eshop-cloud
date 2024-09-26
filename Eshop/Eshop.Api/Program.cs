@@ -1,3 +1,5 @@
+using Eshop.DataAccess.Context;
+using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,10 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 	var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"));
 	return ConnectionMultiplexer.Connect(configuration);
 });
+
+builder.Services.AddDbContext<EshopDbContext>(options =>
+	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 var app = builder.Build();
 
