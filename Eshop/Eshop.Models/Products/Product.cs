@@ -25,6 +25,10 @@ namespace Eshop.Models.Products
 		public double CostWithTax { get; set; }
 		public double CostBefore { get; set; }
 
+		public string ImageUrl { get; set; }
+
 		public List<OrderProduct> OrderProducts { get; set; }
+
+		public List<ProductCategory> ProductCategories { get; set; }
 	}
 }
