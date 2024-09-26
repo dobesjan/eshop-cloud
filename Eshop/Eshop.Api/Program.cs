@@ -1,4 +1,5 @@
 using Eshop.DataAccess.Context;
+using Eshop.DataAccess.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -21,6 +22,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 builder.Services.AddDbContext<EshopDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 

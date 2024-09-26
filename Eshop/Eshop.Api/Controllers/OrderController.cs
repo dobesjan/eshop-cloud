@@ -1,3 +1,5 @@
+using Eshop.DataAccess.UnitOfWork;
+using Eshop.Models.Products;
 using Microsoft.AspNetCore.Mvc;
 using StackExchange.Redis;
 
@@ -9,11 +11,13 @@ namespace Eshop.Api.Controllers
 	{
 		private readonly ILogger<OrderController> _logger;
 		private readonly IConnectionMultiplexer _redis;
+		private readonly IUnitOfWork _unitOfWork;
 
-		public OrderController(ILogger<OrderController> logger, IConnectionMultiplexer redis)
+		public OrderController(ILogger<OrderController> logger, IConnectionMultiplexer redis, IUnitOfWork unitOfWork)
 		{
 			_logger = logger;
 			_redis = redis;
+			_unitOfWork = unitOfWork;
 		}
 
 		[HttpPost]
@@ -25,9 +29,15 @@ namespace Eshop.Api.Controllers
 				return BadRequest(new { validationResult });
 			}
 
-			string json = order.ToJson();
-			var db = _redis.GetDatabase();
-			db.ListRightPushAsync("orders", json);
+			List<Product> products = order.OrderProducts.Select(op => op.Product).ToList();
+			if (!_unitOfWork.ProductRepository.AreStored(products))
+			{
+				return BadRequest();
+			}
+
+			_unitOfWork.OrderRepository.Add(order);
+			_unitOfWork.OrderRepository.Save();
+			
 			return Ok();
 		}
 
