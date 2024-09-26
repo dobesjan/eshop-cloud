@@ -36,5 +36,23 @@ namespace Eshop.DataAccess.Context
 		{
 
 		}
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<OrderProduct>()
+				.HasKey(pc => new { pc.ProductId, pc.OrderId });
+
+			modelBuilder.Entity<OrderProduct>()
+				.HasOne(pc => pc.Product)
+				.WithMany(p => p.OrderProducts)
+				.HasForeignKey(pc => pc.ProductId);
+
+			modelBuilder.Entity<OrderProduct>()
+				.HasOne(pc => pc.Order)
+				.WithMany(c => c.OrderProducts)
+				.HasForeignKey(pc => pc.OrderId);
+
+			base.OnModelCreating(modelBuilder);
+		}
 	}
 }

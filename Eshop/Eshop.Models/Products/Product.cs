@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eshop.Models.Orders;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -23,5 +24,7 @@ namespace Eshop.Models.Products
 		public double Cost { get; set; }
 		public double CostWithTax { get; set; }
 		public double CostBefore { get; set; }
+
+		public List<OrderProduct> OrderProducts { get; set; }
 	}
 }
