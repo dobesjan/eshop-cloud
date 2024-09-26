@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Eshop.Models
@@ -17,7 +18,7 @@ namespace Eshop.Models
 
 		public virtual string ToJson()
 		{
-			throw new NotImplementedException();
+			return JsonSerializer.Serialize(this);
 		}
 
 		public virtual EshopValidationResult Validate()

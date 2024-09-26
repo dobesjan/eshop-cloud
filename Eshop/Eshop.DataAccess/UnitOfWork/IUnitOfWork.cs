@@ -13,5 +13,6 @@ namespace Eshop.DataAccess.UnitOfWork
 		public IOrderRepository OrderRepository { get; }
 
 		public IProductRepository ProductRepository { get; }
+		public ICategoryRepository CategoryRepository { get; }
 	}
 }

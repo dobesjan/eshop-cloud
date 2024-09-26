@@ -15,6 +15,7 @@ namespace Eshop.DataAccess.UnitOfWork
 
 		public IOrderRepository OrderRepository { get; }
 		public IProductRepository ProductRepository { get; }
+		public ICategoryRepository CategoryRepository { get; }
 
 		public UnitOfWork(EshopDbContext context)
 		{
@@ -22,6 +23,7 @@ namespace Eshop.DataAccess.UnitOfWork
 
 			OrderRepository = new OrderRepository(_context);
 			ProductRepository = new ProductRepository(_context);
+			CategoryRepository = new CategoryRepository(_context);
 		}
 	}
 }
