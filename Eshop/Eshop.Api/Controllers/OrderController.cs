@@ -1,5 +1,6 @@
 using Eshop.DataAccess.UnitOfWork;
 using Eshop.Models.Products;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StackExchange.Redis;
 
@@ -7,6 +8,7 @@ namespace Eshop.Api.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
+	[Authorize]
 	public class OrderController : ControllerBase
 	{
 		private readonly ILogger<OrderController> _logger;

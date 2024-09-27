@@ -1,10 +1,12 @@
 ﻿using Eshop.DataAccess.UnitOfWork;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eshop.Api.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
+	[Authorize]
 	public class CategoryController : ControllerBase
 	{
 		private readonly IUnitOfWork _unitOfWork;
