@@ -1,8 +1,11 @@
 using Eshop.DataAccess.UnitOfWork;
+using Eshop.Models.Orders;
 using Eshop.Models.Products;
+using Invoices.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StackExchange.Redis;
+using System.Text.Json;
 
 namespace Eshop.Api.Controllers
 {
@@ -39,7 +42,36 @@ namespace Eshop.Api.Controllers
 
 			_unitOfWork.OrderRepository.Add(order);
 			_unitOfWork.OrderRepository.Save();
-			
+
+			OrderInvoice orderInvoice = new OrderInvoice
+			{
+				InvoiceNumber = 1,
+				IssueDate = DateTime.Now,
+				OrderId = order.Id
+			};
+
+			var latestInvoice = _unitOfWork.OrderInvoiceRepository.GetAll().OrderByDescending(i => i.InvoiceNumber).FirstOrDefault();
+			if (latestInvoice != null)
+			{
+				orderInvoice.InvoiceNumber = latestInvoice.InvoiceNumber + 1;
+			}
+
+			// TODO: GEt seller info
+			Invoice invoice = new Invoice
+			{
+				InvoiceNumber = orderInvoice.InvoiceNumber,
+				IssueDate = orderInvoice.IssueDate,
+				Seller = "",
+				Buyer = order.BillingContact?.Person?.FirstName + " " + order.BillingContact?.Person?.LastName,
+				TotalAmount = order.Payment.Cost
+			};
+
+			invoice.Items = GetInvoiceItems(invoice, order);
+
+			string json = JsonSerializer.Serialize(invoice);
+			var db = _redis.GetDatabase();
+			db.ListRightPushAsync("invoices", json);
+
 			return Ok();
 		}
 
@@ -50,6 +82,26 @@ namespace Eshop.Api.Controllers
 			var db = _redis.GetDatabase();
 			db.ListRightPushAsync("payments", json);
 			return Ok();
+		}
+
+		private List<InvoiceItem> GetInvoiceItems(Invoice invoice, Models.Orders.Order order) 
+		{
+			List<InvoiceItem> items = new List<InvoiceItem>();
+			var products = order.OrderProducts.Select(op => op.Product);
+
+			foreach (OrderProduct orderProduct in order.OrderProducts)
+			{
+				InvoiceItem item = new InvoiceItem
+				{
+					Description = String.Empty,
+					Quantity = orderProduct.Count,
+					UnitPrice = orderProduct.Cost
+				};
+
+				items.Add(item);
+			}
+
+			return items;
 		}
 	}
 }

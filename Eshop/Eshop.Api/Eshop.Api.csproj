@@ -21,6 +21,7 @@
     <ProjectReference Include="..\Eshop.DataAccess\Eshop.DataAccess.csproj" />
     <ProjectReference Include="..\Eshop.Models\Eshop.Models.csproj" />
     <ProjectReference Include="..\Eshop.Utility\Eshop.Utility.csproj" />
+    <ProjectReference Include="..\Invoices.Models\Invoices.Models.csproj" />
   </ItemGroup>
 
 </Project>

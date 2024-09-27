@@ -10,7 +10,7 @@ namespace Invoices.Models
 	{
 		public string Description { get; set; }
 		public int Quantity { get; set; }
-		public decimal UnitPrice { get; set; }
-		public decimal TotalPrice => Quantity * UnitPrice;
+		public double UnitPrice { get; set; }
+		public double TotalPrice => Quantity * UnitPrice;
 	}
 }

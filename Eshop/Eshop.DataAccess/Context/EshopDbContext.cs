@@ -15,6 +15,7 @@ namespace Eshop.DataAccess.Context
 		#region Orders
 		public DbSet<Order> Orders { get; set; }
 		public DbSet<OrderProduct> OrderProducts { get; set; }
+		public DbSet<OrderInvoice> OrderInvoices { get; set; }
 		public DbSet<Payment> Payment { get; set; }
 		public DbSet<PaymentMethod> PaymentMethod { get; set; }
 		public DbSet<PaymentStatus> PaymentStatus { get; set; }

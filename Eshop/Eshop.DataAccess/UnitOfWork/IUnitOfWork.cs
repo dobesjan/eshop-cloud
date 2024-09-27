@@ -11,6 +11,7 @@ namespace Eshop.DataAccess.UnitOfWork
 	public interface IUnitOfWork
 	{
 		public IOrderRepository OrderRepository { get; }
+		public IOrderInvoiceRepository OrderInvoiceRepository { get; }
 
 		public IProductRepository ProductRepository { get; }
 		public ICategoryRepository CategoryRepository { get; }
