@@ -1,9 +1,11 @@
+using Eshop.Api.Configuration;
 using Eshop.DataAccess.UnitOfWork;
 using Eshop.Models.Orders;
 using Eshop.Models.Products;
 using Invoices.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using System.Text.Json;
 
@@ -17,12 +19,14 @@ namespace Eshop.Api.Controllers
 		private readonly ILogger<OrderController> _logger;
 		private readonly IConnectionMultiplexer _redis;
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly QueuesOptions _queueOptions;
 
-		public OrderController(ILogger<OrderController> logger, IConnectionMultiplexer redis, IUnitOfWork unitOfWork)
+		public OrderController(ILogger<OrderController> logger, IConnectionMultiplexer redis, IUnitOfWork unitOfWork, IOptions<QueuesOptions> queueOptions)
 		{
 			_logger = logger;
 			_redis = redis;
 			_unitOfWork = unitOfWork;
+			_queueOptions = queueOptions.Value;
 		}
 
 		[HttpPost]
@@ -70,7 +74,7 @@ namespace Eshop.Api.Controllers
 
 			string json = JsonSerializer.Serialize(invoice);
 			var db = _redis.GetDatabase();
-			db.ListRightPushAsync("invoices", json);
+			db.ListRightPushAsync(_queueOptions.Invoice, json);
 
 			return Ok();
 		}
@@ -80,7 +84,7 @@ namespace Eshop.Api.Controllers
 		{
 			string json = payment.ToJson();
 			var db = _redis.GetDatabase();
-			db.ListRightPushAsync("payments", json);
+			db.ListRightPushAsync(_queueOptions.Payment, json);
 			return Ok();
 		}
 

@@ -1,3 +1,4 @@
+using Eshop.Api.Configuration;
 using Eshop.DataAccess.Context;
 using Eshop.DataAccess.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -90,6 +91,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 builder.Services.AddDbContext<EshopDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+builder.Services.Configure<QueuesOptions>(builder.Configuration.GetSection("Queues"));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
