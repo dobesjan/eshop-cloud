@@ -11,9 +11,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eshop.OrderProcessor", "Esh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eshop.Utility", "Eshop.Utility\Eshop.Utility.csproj", "{42AA3CDC-34CF-4B98-B575-9A9AD93D7257}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eshop.DataAccess", "Eshop.DataAccess\Eshop.DataAccess.csproj", "{5C611878-F93A-4E5D-A7BD-583F756D887A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eshop.DataAccess", "Eshop.DataAccess\Eshop.DataAccess.csproj", "{5C611878-F93A-4E5D-A7BD-583F756D887A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eshop.Admin.Api", "Eshop.Admin.Api\Eshop.Admin.Api.csproj", "{A5E952F7-DC0F-456F-9A54-3EB1B37DADAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eshop.Admin.Api", "Eshop.Admin.Api\Eshop.Admin.Api.csproj", "{A5E952F7-DC0F-456F-9A54-3EB1B37DADAB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Invoices", "Invoices", "{08E2C625-9D15-4F41-8612-9AE1B9BBEACD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invoices.Service", "Invoices.Service\Invoices.Service.csproj", "{0CF919B3-8C20-44FE-8A02-53DDA0EB36A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invoices.Models", "Invoices.Models\Invoices.Models.csproj", "{EC00FC10-CC80-41C7-90AE-340843506A09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,9 +51,21 @@ Global
 		{A5E952F7-DC0F-456F-9A54-3EB1B37DADAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5E952F7-DC0F-456F-9A54-3EB1B37DADAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5E952F7-DC0F-456F-9A54-3EB1B37DADAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CF919B3-8C20-44FE-8A02-53DDA0EB36A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CF919B3-8C20-44FE-8A02-53DDA0EB36A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CF919B3-8C20-44FE-8A02-53DDA0EB36A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CF919B3-8C20-44FE-8A02-53DDA0EB36A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC00FC10-CC80-41C7-90AE-340843506A09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC00FC10-CC80-41C7-90AE-340843506A09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC00FC10-CC80-41C7-90AE-340843506A09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC00FC10-CC80-41C7-90AE-340843506A09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0CF919B3-8C20-44FE-8A02-53DDA0EB36A3} = {08E2C625-9D15-4F41-8612-9AE1B9BBEACD}
+		{EC00FC10-CC80-41C7-90AE-340843506A09} = {08E2C625-9D15-4F41-8612-9AE1B9BBEACD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D368E76E-ADE1-4516-A8C0-57C11E988F21}
