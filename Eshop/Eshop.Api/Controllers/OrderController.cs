@@ -49,16 +49,10 @@ namespace Eshop.Api.Controllers
 
 			OrderInvoice orderInvoice = new OrderInvoice
 			{
-				InvoiceNumber = 1,
+				InvoiceNumber = order.Id,
 				IssueDate = DateTime.Now,
 				OrderId = order.Id
 			};
-
-			var latestInvoice = _unitOfWork.OrderInvoiceRepository.GetAll().OrderByDescending(i => i.InvoiceNumber).FirstOrDefault();
-			if (latestInvoice != null)
-			{
-				orderInvoice.InvoiceNumber = latestInvoice.InvoiceNumber + 1;
-			}
 
 			// TODO: GEt seller info
 			Invoice invoice = new Invoice
