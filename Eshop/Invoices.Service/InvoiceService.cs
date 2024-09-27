@@ -1,6 +1,7 @@
 ﻿using Invoices.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,16 @@ namespace Invoices.Service
 {
 	public class InvoiceService
 	{
+		private string _storePath;
+
+		public InvoiceService(IConfiguration configuration) 
+		{
+			_storePath = configuration["FileStore:Path"];
+		}
+
 		public void GenerateInvoice(Invoice invoice)
 		{
-			string filePath = $@"C:\Invoices\{invoice.InvoiceNumber}.pdf";
+			string filePath = $@"{_storePath}{invoice.InvoiceNumber}.pdf";
 
 			Document document = new Document();
 			PdfWriter.GetInstance(document, new FileStream(filePath, FileMode.Create));
