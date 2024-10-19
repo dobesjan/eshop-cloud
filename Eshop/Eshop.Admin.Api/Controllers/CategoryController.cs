@@ -45,6 +45,14 @@ namespace Eshop.Admin.Api.Controllers
 			return Ok();
 		}
 
+		[HttpPost("Update")]
+		public IActionResult Update([FromBody] Category category)
+		{
+			_unitOfWork.CategoryRepository.Update(category);
+			_unitOfWork.CategoryRepository.Save();
+			return Ok();
+		}
+
 		[HttpPost("Delete")]
 		public IActionResult Delete([FromBody] DeleteCategoryRequest request)
 		{
