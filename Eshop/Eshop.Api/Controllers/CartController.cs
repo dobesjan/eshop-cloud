@@ -84,6 +84,8 @@ namespace Eshop.Api.Controllers
 				_unitOfWork.OrderRepository.Update(cart);
 				_unitOfWork.OrderRepository.Save();
 
+				// TODO: Send request for invoice generation
+
 				return Ok(cart);
 			}
 			catch (InvalidDataException ex)

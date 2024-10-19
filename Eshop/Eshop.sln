@@ -17,19 +17,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eshop.Admin.Api", "Eshop.Ad
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Invoices", "Invoices", "{08E2C625-9D15-4F41-8612-9AE1B9BBEACD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invoices.Service", "Invoices.Service\Invoices.Service.csproj", "{0CF919B3-8C20-44FE-8A02-53DDA0EB36A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoices.Service", "Invoices.Service\Invoices.Service.csproj", "{0CF919B3-8C20-44FE-8A02-53DDA0EB36A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invoices.Models", "Invoices.Models\Invoices.Models.csproj", "{EC00FC10-CC80-41C7-90AE-340843506A09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoices.Models", "Invoices.Models\Invoices.Models.csproj", "{EC00FC10-CC80-41C7-90AE-340843506A09}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{3CF78200-C07C-452F-A7D2-DBB35D0739C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Api", "Authentication.Api\Authentication.Api.csproj", "{50B39959-B0B2-4FBF-9C49-7AE10DD4D7E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.Api", "Authentication.Api\Authentication.Api.csproj", "{50B39959-B0B2-4FBF-9C49-7AE10DD4D7E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication.Models", "Authentication.Models\Authentication.Models.csproj", "{132DA95C-93BE-4D91-9610-0F357FC109E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authentication.Models", "Authentication.Models\Authentication.Models.csproj", "{132DA95C-93BE-4D91-9610-0F357FC109E6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FileStore", "FileStore", "{D63225BA-6A62-490A-B1AE-58EFBDF2D690}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Filestore.Api", "Filestore.Api\Filestore.Api.csproj", "{4330AFBA-2EC6-434B-ACCF-04AF6D8F5D31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Filestore.Api", "Filestore.Api\Filestore.Api.csproj", "{4330AFBA-2EC6-434B-ACCF-04AF6D8F5D31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eshop.Admin.Models", "Eshop.Admin.Models\Eshop.Admin.Models.csproj", "{D49EDF79-7951-40AE-8089-690C44F6D611}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{4330AFBA-2EC6-434B-ACCF-04AF6D8F5D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4330AFBA-2EC6-434B-ACCF-04AF6D8F5D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4330AFBA-2EC6-434B-ACCF-04AF6D8F5D31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D49EDF79-7951-40AE-8089-690C44F6D611}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D49EDF79-7951-40AE-8089-690C44F6D611}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D49EDF79-7951-40AE-8089-690C44F6D611}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D49EDF79-7951-40AE-8089-690C44F6D611}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
