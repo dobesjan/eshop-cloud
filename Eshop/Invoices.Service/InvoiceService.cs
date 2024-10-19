@@ -2,6 +2,8 @@
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +15,16 @@ namespace Invoices.Service
 	public class InvoiceService
 	{
 		private string _storePath;
+		private string _queueName;
+		private readonly ConnectionMultiplexer _redis;
+		private readonly IDatabase _database;
 
-		public InvoiceService(IConfiguration configuration) 
+		public InvoiceService(IConfiguration configuration, ConnectionMultiplexer redis) 
 		{
 			_storePath = configuration["FileStore:Path"];
+			_queueName = configuration["Redis:QueueName"];
+			_redis = redis;
+			_database = redis.GetDatabase();
 		}
 
 		public void GenerateInvoice(Invoice invoice)
@@ -48,6 +56,36 @@ namespace Invoices.Service
 			document.Close();
 
 			Console.WriteLine($"Invoice {invoice.InvoiceNumber} generated at {filePath}.");
+		}
+
+		public async Task ListenOnInvoices(CancellationTokenSource cancellationTokenSource, CancellationToken cancellationToken)
+		{
+			try
+			{
+				// Continuously listen for invoice requests in Redis
+				while (true)
+				{
+					var invoiceRequest = await _database.ListRightPopAsync(_queueName);
+					if (!invoiceRequest.IsNullOrEmpty)
+					{
+						var invoice = JsonConvert.DeserializeObject<Invoice>(invoiceRequest);
+						if (invoice != null)
+						{
+							GenerateInvoice(invoice);
+						}
+					}
+
+					await Task.Delay(1000, cancellationToken);
+				}
+			}
+			catch (TaskCanceledException)
+			{
+				Console.WriteLine("Invoice processing loop canceled.");
+			}
+			finally
+			{
+				cancellationTokenSource.Dispose();
+			}
 		}
 	}
 }

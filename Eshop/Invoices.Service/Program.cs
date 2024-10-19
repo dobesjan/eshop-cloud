@@ -20,9 +20,6 @@ var host = Host.CreateDefaultBuilder(args)
 	})
 	.Build();
 
-var redis = host.Services.GetRequiredService<ConnectionMultiplexer>();
-var db = redis.GetDatabase();
-var queueName = host.Services.GetRequiredService<string>();
 var invoiceService = host.Services.GetRequiredService<InvoiceService>();
 
 Console.WriteLine("Connected to Redis.");
@@ -30,29 +27,4 @@ Console.WriteLine("Connected to Redis.");
 CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 CancellationToken cancellationToken = cancellationTokenSource.Token;
 
-try
-{
-	// Continuously listen for invoice requests in Redis
-	while (true)
-	{
-		var invoiceRequest = await db.ListRightPopAsync(queueName);
-		if (!invoiceRequest.IsNullOrEmpty)
-		{
-			var invoice = JsonConvert.DeserializeObject<Invoice>(invoiceRequest);
-			if (invoice != null)
-			{
-				invoiceService.GenerateInvoice(invoice);
-			}
-		}
-
-		await Task.Delay(1000, cancellationToken);
-	}
-}
-catch (TaskCanceledException)
-{
-	Console.WriteLine("Invoice processing loop canceled.");
-}
-finally
-{
-	cancellationTokenSource.Dispose();
-}
+await invoiceService.ListenOnInvoices(cancellationTokenSource, cancellationToken);
