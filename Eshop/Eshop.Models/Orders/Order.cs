@@ -112,5 +112,15 @@ namespace Eshop.Models.Orders
 
 			return result;
 		}
+
+		public double CalculateCost()
+		{
+			return OrderProducts.Sum(p => p.Cost);
+		}
+
+		public double CalculateCostWithTax()
+		{
+			return OrderProducts.Sum(p => p.CostWithTax);
+		}
 	}
 }
