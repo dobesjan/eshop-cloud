@@ -37,6 +37,10 @@ namespace Eshop.Models.Orders
 		[ForeignKey(nameof(DeliveryContactId))]
 		public Contact? DeliveryContact { get; set; }
 
+		public bool IsOrdered { get; set; }
+
+		public string UserId { get; set; }
+
 		public override string ToJson()
 		{
 			object obj = new
