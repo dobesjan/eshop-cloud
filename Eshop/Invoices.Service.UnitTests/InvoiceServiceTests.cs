@@ -92,5 +92,32 @@ namespace Invoices.Service.UnitTests
 				File.Delete(expectedFilePath);
 			}
 		}
+
+		[Fact]
+		public async Task SendInvoiceToRedis_ShouldPushInvoiceToRedisQueue()
+		{
+			var invoice = new Invoice
+			{
+				InvoiceNumber = 1,
+				IssueDate = DateTime.Now,
+				Seller = "Test Seller",
+				Buyer = "Test Buyer",
+				Items = new List<InvoiceItem>
+				{
+					new InvoiceItem { Description = "Item 1", Quantity = 2, UnitPrice = 50 },
+					new InvoiceItem { Description = "Item 2", Quantity = 1, UnitPrice = 75 }
+				},
+				TotalAmount = 175
+			};
+
+			string invoiceJson = JsonConvert.SerializeObject(invoice);
+
+			_mockDatabase.Setup(db => db.ListLeftPushAsync("invoiceOutput", It.IsAny<RedisValue>(), It.IsAny<When>(), It.IsAny<CommandFlags>()))
+						 .ReturnsAsync(1);
+
+			await _invoiceService.SendInvoiceToRedis(invoice);
+
+			_mockDatabase.Verify(db => db.ListLeftPushAsync("invoiceOutput", invoiceJson, When.Always, It.IsAny<CommandFlags>()), Times.Once);
+		}
 	}
 }

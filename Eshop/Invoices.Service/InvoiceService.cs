@@ -16,6 +16,7 @@ namespace Invoices.Service
 	{
 		private string _storePath;
 		private string _queueName;
+		private string _outputQueueName;
 		private readonly IConnectionMultiplexer _redis;
 		private readonly IDatabase _database;
 
@@ -23,6 +24,7 @@ namespace Invoices.Service
 		{
 			_storePath = configuration["FileStore:Path"];
 			_queueName = configuration["Redis:QueueName"];
+			_outputQueueName = configuration["Redis:OutputQueueName"];
 			_redis = redis;
 			_database = redis.GetDatabase();
 		}
@@ -78,6 +80,7 @@ namespace Invoices.Service
 						if (invoice != null)
 						{
 							GenerateInvoice(invoice);
+							SendInvoiceToRedis(invoice);
 						}
 					}
 
@@ -92,6 +95,15 @@ namespace Invoices.Service
 			{
 				cancellationTokenSource.Dispose();
 			}
+		}
+
+		public async Task SendInvoiceToRedis(Invoice invoice)
+		{
+			string invoiceJson = JsonConvert.SerializeObject(invoice);
+
+			await _database.ListLeftPushAsync(_outputQueueName, invoiceJson);
+
+			Console.WriteLine($"Invoice {invoice.InvoiceNumber} sent to Redis queue {_queueName}.");
 		}
 	}
 }
