@@ -55,10 +55,10 @@ namespace Invoices.Service
 				}
 
 				document.Add(new Paragraph($"Total: {invoice.TotalAmount:C}"));
-				document.Close(); // Ensure the document is closed
+				document.Close();
 
-				writer.Close(); // Ensure the writer is closed
-				fs.Flush(); // Flush any remaining data
+				writer.Close();
+				fs.Flush();
 			}
 
 			Console.WriteLine($"Invoice {invoice.InvoiceNumber} generated at {filePath}.");
@@ -69,7 +69,6 @@ namespace Invoices.Service
 		{
 			try
 			{
-				// Continuously listen for invoice requests in Redis
 				while (true)
 				{
 					var invoiceRequest = await _database.ListRightPopAsync(_queueName);
