@@ -15,7 +15,7 @@ var host = Host.CreateDefaultBuilder(args)
 		var redisQueueName = configuration["Redis:QueueName"];
 
 		services.AddSingleton<InvoiceService>();
-		services.AddSingleton(ConnectionMultiplexer.Connect(redisConnectionString));
+		services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString));
 		services.AddSingleton(redisQueueName);
 	})
 	.Build();

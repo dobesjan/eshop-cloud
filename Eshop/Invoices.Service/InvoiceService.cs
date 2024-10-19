@@ -16,10 +16,10 @@ namespace Invoices.Service
 	{
 		private string _storePath;
 		private string _queueName;
-		private readonly ConnectionMultiplexer _redis;
+		private readonly IConnectionMultiplexer _redis;
 		private readonly IDatabase _database;
 
-		public InvoiceService(IConfiguration configuration, ConnectionMultiplexer redis) 
+		public InvoiceService(IConfiguration configuration, IConnectionMultiplexer redis) 
 		{
 			_storePath = configuration["FileStore:Path"];
 			_queueName = configuration["Redis:QueueName"];
@@ -31,32 +31,39 @@ namespace Invoices.Service
 		{
 			string filePath = $@"{_storePath}{invoice.InvoiceNumber}.pdf";
 
-			Document document = new Document();
-			PdfWriter.GetInstance(document, new FileStream(filePath, FileMode.Create));
-			document.Open();
-
-			document.AddTitle("Invoice");
-			document.AddSubject("Invoice for the Czech market");
-			document.AddKeywords("Invoice, Czech, PDF");
-			document.AddAuthor("CzechInvoiceApp");
-
-			document.Add(new Paragraph("INVOICE"));
-			document.Add(new Paragraph($"Invoice Number: {invoice.InvoiceNumber}"));
-			document.Add(new Paragraph($"Date: {invoice.IssueDate.ToString("dd/MM/yyyy")}"));
-			document.Add(new Paragraph($"Seller: {invoice.Seller}"));
-			document.Add(new Paragraph($"Buyer: {invoice.Buyer}"));
-			document.Add(new Paragraph("Items:"));
-
-			foreach (var item in invoice.Items)
+			using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+			using (Document document = new Document())
 			{
-				document.Add(new Paragraph($"{item.Description} - {item.Quantity} x {item.UnitPrice:C} = {item.TotalPrice:C}"));
-			}
+				PdfWriter writer = PdfWriter.GetInstance(document, fs);
+				document.Open();
 
-			document.Add(new Paragraph($"Total: {invoice.TotalAmount:C}"));
-			document.Close();
+				document.AddTitle("Invoice");
+				document.AddSubject("Invoice for the Czech market");
+				document.AddKeywords("Invoice, Czech, PDF");
+				document.AddAuthor("CzechInvoiceApp");
+
+				document.Add(new Paragraph("INVOICE"));
+				document.Add(new Paragraph($"Invoice Number: {invoice.InvoiceNumber}"));
+				document.Add(new Paragraph($"Date: {invoice.IssueDate:dd/MM/yyyy}"));
+				document.Add(new Paragraph($"Seller: {invoice.Seller}"));
+				document.Add(new Paragraph($"Buyer: {invoice.Buyer}"));
+				document.Add(new Paragraph("Items:"));
+
+				foreach (var item in invoice.Items)
+				{
+					document.Add(new Paragraph($"{item.Description} - {item.Quantity} x {item.UnitPrice:C} = {item.TotalPrice:C}"));
+				}
+
+				document.Add(new Paragraph($"Total: {invoice.TotalAmount:C}"));
+				document.Close(); // Ensure the document is closed
+
+				writer.Close(); // Ensure the writer is closed
+				fs.Flush(); // Flush any remaining data
+			}
 
 			Console.WriteLine($"Invoice {invoice.InvoiceNumber} generated at {filePath}.");
 		}
+
 
 		public async Task ListenOnInvoices(CancellationTokenSource cancellationTokenSource, CancellationToken cancellationToken)
 		{
