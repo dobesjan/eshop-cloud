@@ -1,6 +1,7 @@
 ﻿using Eshop.DataAccess.UnitOfWork;
 using Eshop.Models.Api.Requests.Cart;
 using Eshop.Models.Orders;
+using Eshop.Models.Api.Responses;
 using Eshop.Utility.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -53,7 +54,7 @@ namespace Eshop.Api.Controllers
 			var product = _unitOfWork.ProductRepository.Get(request.ProductId);
 			if (product == null)
 			{
-				return BadRequest(new { Error = "Product not found!" });
+				return BadRequest(new ErrorResponse { Error = "Product not found!" });
 			}
 
 			try
@@ -63,7 +64,7 @@ namespace Eshop.Api.Controllers
 			}
 			catch (InvalidDataException ex)
 			{
-				return BadRequest(new { Error = ex.Message });
+				return BadRequest(new ErrorResponse { Error = ex.Message });
 			}
 		}
 
@@ -90,7 +91,7 @@ namespace Eshop.Api.Controllers
 			}
 			catch (InvalidDataException ex)
 			{
-				return BadRequest(new { Error = ex.Message });
+				return BadRequest(new ErrorResponse { Error = ex.Message });
 			}
 		}
 
@@ -115,7 +116,7 @@ namespace Eshop.Api.Controllers
 			}
 			catch (InvalidDataException ex)
 			{
-				return BadRequest(new { Error = ex.Message });
+				return BadRequest(new ErrorResponse { Error = ex.Message });
 			}
 		}
 
@@ -141,6 +142,8 @@ namespace Eshop.Api.Controllers
 					Cost = cart.CalculateCost(),
 					CostWithTax = cart.CalculateCostWithTax()
 				};
+
+				cart.Payment = payment;
 				
 				_unitOfWork.OrderRepository.Update(cart);
 				_unitOfWork.OrderRepository.Save();
@@ -149,7 +152,7 @@ namespace Eshop.Api.Controllers
 			}
 			catch (InvalidDataException ex)
 			{
-				return BadRequest(new { Error = ex.Message });
+				return BadRequest(new ErrorResponse { Error = ex.Message });
 			}
 		}
 	}
