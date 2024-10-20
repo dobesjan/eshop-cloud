@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eshop.Utility.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,6 @@ namespace Eshop.Models.Api.Responses
 	public class ErrorResponse
 	{
 		public string Error { get; set; }
+		public EshopValidationResult? Validation { get; set; }
 	}
 }

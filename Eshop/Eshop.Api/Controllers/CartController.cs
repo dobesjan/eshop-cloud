@@ -78,7 +78,7 @@ namespace Eshop.Api.Controllers
 
 				if (result.Status == EshopValidationStatus.FAIL)
 				{
-					return BadRequest(result);
+					return BadRequest(new ErrorResponse { Error = "Validation failed!", Validation = result });
 				}
 
 				cart.IsOrdered = true;

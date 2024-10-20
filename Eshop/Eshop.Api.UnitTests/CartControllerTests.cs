@@ -5,6 +5,7 @@ using Eshop.DataAccess.UnitOfWork;
 using Eshop.Models.Api.Requests.Cart;
 using Eshop.Models.Orders;
 using Eshop.Models.Products;
+using Eshop.Utility.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -184,6 +185,71 @@ namespace Eshop.Api.UnitTests
 
 			var okResult = Assert.IsType<OkObjectResult>(result);
 			Assert.Equal(cart, okResult.Value);
+		}
+
+		[Fact]
+		public void Order_ShouldReturnBadRequest_WhenOrderIsInvalid()
+		{
+			var mockUnitOfWork = new Mock<IUnitOfWork>();
+			var mockOrderRepository = new Mock<IOrderRepository>();
+			mockUnitOfWork.Setup(u => u.OrderRepository).Returns(mockOrderRepository.Object);
+
+			var paymentMethod = new PaymentMethod
+			{
+				Name = "Card",
+				Enabled = true,
+				ShippingPaymentMethod = new List<ShippingPaymentMethod>
+				{
+					new ShippingPaymentMethod
+					{
+					ShippingId = 1,
+					PaymentMethodId = 1,
+					}
+				}
+			};
+
+			var payment = new Payment
+			{
+				OrderId = 1,
+				PaymentStatusId = 1,
+				PaymentMethodId = 1,
+				PaymentMethod = paymentMethod,
+				Cost = 30,
+				CostWithTax = 45
+			};
+
+			var cart = new Order
+			{
+				Id = 1,
+				CreatedDate = DateTime.UtcNow,
+				ShippingId = 1,
+				BillingContactId = 1,
+				BillingContact = new Models.Users.Contact
+				{
+					Id = 1,
+					AddressId = 1,
+					Address = new Models.Users.Address
+					{
+						CustomerId = 1,
+						City = "Brno",
+						Street = "Center",
+						PostalCode = "666 00"
+					}
+				},
+				PaymentId = 1,
+				Payment = payment
+			};
+
+			mockOrderRepository.Setup(o => o.GetCart(It.IsAny<string>(), It.IsAny<int>())).Returns(cart);
+
+			var controller = new CartController(mockUnitOfWork.Object);
+
+			var result = controller.Order("user123", 1);
+
+			var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+			Assert.IsType<EshopValidationResult>(((dynamic)badRequestResult.Value).Validation);
+			Assert.Equal(EshopValidationStatus.FAIL, (EshopValidationStatus)((dynamic)badRequestResult.Value).Validation.Status);
+			Assert.Equal(2, ((dynamic)badRequestResult.Value).Validation.Messages.Count);
 		}
 
 		[Fact]
