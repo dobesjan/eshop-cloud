@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Eshop.Models.Orders
 {
-	public class ShippingPaymentMethod
+	public class ShippingPaymentMethod : Entity
 	{
 		public int ShippingId { get; set; }
 		public Shipping Shipping { get; set; }
